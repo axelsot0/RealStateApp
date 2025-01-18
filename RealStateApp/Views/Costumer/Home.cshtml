@@ -1,0 +1,165 @@
+﻿@model IEnumerable<RealStateApp.Core.Application.ViewModels.Properties.PropiedadViewModel>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Cliente</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        .footer{
+            margin-top: 80px;
+        }
+        :root {
+            --rich-black: #050517;
+            --flame: #CF5C36;
+            --sunset: #EFC88B;
+            --vanilla: #F4E3B2;
+            --platinum: #D3D5D7;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--vanilla);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .property-card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+            .property-card:hover {
+                transform: scale(1.02);
+            }
+
+        .property-image img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .property-info {
+            padding: 15px;
+        }
+
+            .property-info h5 {
+                margin: 0;
+                color: var(--rich-black);
+                font-size: 1.2rem;
+            }
+
+        .property-price {
+            color: var(--flame);
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .favorite-button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--flame);
+        }
+
+            .favorite-button.favorited {
+                color: red;
+            }
+
+        .error-message {
+            background-color: var(--flame);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div>
+    <h2 class="text-center">Propiedades Disponibles</h2>
+
+    <!-- Manejo de Errores -->
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="error-message">
+            <ul>
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <li>@error.ErrorMessage</li>
+                }
+            </ul>
+        </div>
+    }
+
+    <!-- Verifica si hay propiedades disponibles -->
+    @if (Model != null && Model.Any())
+    {
+        <div class="row">
+            @foreach (var propiedad in Model)
+            {
+                <a asp-controller="Property" asp-action="Details" asp-route-id="@propiedad.Id" class="text-decoration-none">
+                    <div class="col-md-4">
+                        <div class="property-card">
+                            <div class="property-image">
+                                <img src="@(propiedad.Imagenes.FirstOrDefault() ?? "https://via.placeholder.com/300")" alt="Imagen de propiedad">
+                            </div>
+                            <div class="property-info">
+                                <h5>@propiedad.TipoPropiedad</h5>
+                                <p>Codigo:@propiedad.CodigoPropiedad</p>
+                                <p class="property-price">RD$ @propiedad.ValorPropiedad</p>
+                                <form asp-controller="Costumer" asp-action="RemoveFavorite" method="post">
+                                    <input type="hidden" name="propiedadId" value="@propiedad.Id"/>
+                                    <button type="submit" class="favorite-button" title="Eliminar de favoritos">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="text-center">No hay propiedades disponibles para mostrar en este momento.</p>
+    }
+
+    <script>
+        async function toggleFavorite(button) {
+            const propiedadId = button.getAttribute("data-propiedad-id");
+            const isFavorited = button.classList.contains("favorited");
+
+            const url = isFavorited
+                ? `/Costumer/RemoveFavorite?propiedadId=${propiedadId}`
+                : `/Costumer/AddFavorite?propiedadId=${propiedadId}`;
+
+            try {
+                const response = await fetch(url, { method: "POST" });
+
+                if (response.ok) {
+                    button.classList.toggle("favorited");
+                } else {
+                    alert("Hubo un problema al actualizar los favoritos.");
+                }
+            } catch (error) {
+                alert("Error de red: no se pudo completar la solicitud.");
+            }
+        }
+    </script>
+    </div>
+</body>
+</html>

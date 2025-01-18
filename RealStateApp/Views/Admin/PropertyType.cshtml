@@ -1,0 +1,79 @@
+﻿@using RealStateApp.Core.Application.ViewModels.Properties
+@model List<PropertyTypeViewModel>
+
+@{
+    ViewData["title"] = "Mantenimiento de tipos de propiedades";
+}
+
+<head>
+    <style>
+        .row{
+            margin: 30px;
+        }
+
+        .crearbtn{
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .form-btn{
+            display: flex;
+            margin-bottom: 0;
+        }
+
+        body {
+            background-color: #f3e3b2;
+        }
+
+        .card {
+            border: 1px solid black;
+            height: 210px;
+        }
+
+        .footer {
+            margin-top: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="crearbtn">
+        <a class="btn btn-primary justify-content-center" asp-controller="Admin" asp-action="CreatePropertyT">Crear tipo</a>
+    </div>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        @try
+        {
+            @foreach (var obj in Model)
+            {
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-text">
+                                <p>Nombre: @obj.Nombre</p>
+                                <p>Descripción: @obj.Descripcion</p>
+                                <p>Propiedades: @obj.Count</p>
+                            </div>
+
+                            <div class="form-btn">
+                                
+                                <form asp-controller="Admin" asp-action="EditPropertyT" method="get">
+                                    <input type="hidden" name="Id" value="@obj.Id" />
+                                    <button class="form-control btn card-link btn-group-sm btn-warning" type="submit">Editar</button>
+                                </form>
+                                <form asp-controller="Admin" asp-action="DeletePropertyT" method="post">
+                                    <input type="hidden" name="Id" value="@obj.Id" />
+                                    <button class="form-control btn btn-danger" type="submit">Eliminar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        catch (Exception ex)
+        {
+            <h2>Error: @ex</h2>
+        }
+    </div>
+</body>

@@ -1,0 +1,96 @@
+﻿@model RealStateApp.Core.Application.ViewModels.Properties.EditPropertyViewModel
+
+<div class="container mt-5">
+    <h2 class="text-center">Editar Propiedad</h2>
+    <form asp-action="EditProperty" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Id" />
+
+        <!-- Tipo de Propiedad -->
+        <div class="mb-3">
+            <label for="TipoPropiedadId">Tipo de Propiedad</label>
+            <select asp-for="TipoPropiedadId" asp-items="ViewBag.TiposPropiedades" class="form-control">
+                <option value="">Seleccione un tipo</option>
+            </select>
+            <span asp-validation-for="TipoPropiedadId" class="text-danger"></span>
+        </div>
+
+        <!-- Tipo de Venta -->
+        <div class="mb-3">
+            <label for="TipoVentaId">Tipo de Venta</label>
+            <select asp-for="TipoVentaId" asp-items="ViewBag.TiposVentas" class="form-control">
+                <option value="">Seleccione un tipo</option>
+            </select>
+            <span asp-validation-for="TipoVentaId" class="text-danger"></span>
+        </div>
+
+        <!-- Precio -->
+        <div class="mb-3">
+            <label asp-for="Precio"></label>
+            <input asp-for="Precio" class="form-control" />
+            <span asp-validation-for="Precio" class="text-danger"></span>
+        </div>
+
+        <!-- Descripción -->
+        <div class="mb-3">
+            <label asp-for="Descripcion"></label>
+            <textarea asp-for="Descripcion" class="form-control"></textarea>
+            <span asp-validation-for="Descripcion" class="text-danger"></span>
+        </div>
+
+        <!-- Tamaño -->
+        <div class="mb-3">
+            <label asp-for="TamañoPropiedad"></label>
+            <input asp-for="TamañoPropiedad" class="form-control" />
+            <span asp-validation-for="TamañoPropiedad" class="text-danger"></span>
+        </div>
+
+        <!-- Habitaciones -->
+        <div class="mb-3">
+            <label asp-for="Habitaciones"></label>
+            <input asp-for="Habitaciones" class="form-control" />
+            <span asp-validation-for="Habitaciones" class="text-danger"></span>
+        </div>
+
+        <!-- Baños -->
+        <div class="mb-3">
+            <label asp-for="Banios"></label>
+            <input asp-for="Banios" class="form-control" />
+            <span asp-validation-for="Banios" class="text-danger"></span>
+        </div>
+
+        <!-- Mejoras -->
+        <div class="mb-3">
+            <label>Mejoras</label>
+            @foreach (var mejora in ViewBag.Mejoras)
+            {
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" name="MejoraIds" value="@mejora.Value" @(mejora.Selected ? "checked" : "") />
+                    <label class="form-check-label">@mejora.Text</label>
+                </div>
+            }
+        </div>
+
+        <!-- Imágenes Existentes -->
+        <div class="mb-3">
+            <label>Imágenes Existentes</label>
+            <div>
+                @foreach (var img in Model.ImagenesExistentes)
+                {
+                    <img src="@img" alt="Imagen existente" style="width: 100px; height: 100px;" />
+                }
+            </div>
+        </div>
+
+        <!-- Nuevas Imágenes -->
+        <div class="mb-3">
+            <label>Nuevas Imágenes</label>
+            <input asp-for="Imagenes" type="file" class="form-control" multiple />
+        </div>
+
+        <!-- Botones -->
+        <div class="d-flex justify-content-between">
+            <a asp-action="AgentProperties" class="btn btn-secondary">Volver</a>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+    </form>
+</div>

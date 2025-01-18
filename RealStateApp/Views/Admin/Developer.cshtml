@@ -1,0 +1,78 @@
+﻿@model List<RealStateApp.Core.Application.ViewModels.User.Desarrollador.AppDeveloperViewModel>
+
+@{
+    ViewData["Title"] = "Manteniemiento de desarrolladores";
+}
+
+<head>
+    <style>
+        .crearbtn{
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .row{
+            margin-top: 30px;
+        }
+
+        body {
+            background-color: #f3e3b2;
+        }
+
+        .card {
+            border: 1px solid black;
+        }
+
+        .footer {
+            margin-top: 100px;
+        }
+
+        .form-btn {
+            display: flex;
+        }
+    </style>
+</head>
+
+<body>
+    <form class="crearbtn" asp-controller="Admin" asp-action="CreateDeveloper" method="post">
+        <button class="btn btn-primary" type="submit">Crear Desarrollador</button>
+    </form>
+
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        @try
+        {
+            @foreach (var obj in Model)
+            {
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+
+                            <p>Nombre de usuario: @obj.UserName</p>
+                            <p>Nombre: @obj.FirstName</p>
+                            <p>Apellido: @obj.LastName</p>
+                            <p>Cedula: @obj.Cedula</p>
+                            <p>Correo @obj.Email</p>
+
+                            <div class="form-btn"> 
+                                <form asp-controller="Admin" asp-action="EditDeveloper" method="get">
+                                    <input type="hidden" name="Id" value="@obj.Id" />
+                                    <button class="btn btn-warning" type="submit">Editar</button>
+                                </form>
+                                <form asp-controller="Admin" asp-action="ChangeDeveloperS" method="post">
+                                    <input type="hidden" name="Id" value="@obj.Id" />
+                                    <button class="btn @(obj.EmailConfirmed ? "btn-danger" : "btn-success")" type="submit">@(obj.EmailConfirmed ? "Desactivar" : "Activar")</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        }
+        catch (Exception ex)
+        {
+            <h2>Error: @ex</h2>
+        }
+    </div>
+</body>

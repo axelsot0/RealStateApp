@@ -1,0 +1,55 @@
+﻿@using RealStateApp.Core.Application.ViewModels.Properties
+@model PropertyTypeViewModel
+
+@{
+    ViewData["title"] = "Editar";
+}
+
+<head>
+    <style>
+        .footer {
+            margin-top: 120px;
+        }
+
+        body {
+            background-color: #f3e3b2;
+        }
+
+        .card {
+            border: 1px solid black;
+            margin-top: 100px;
+        }
+    </style>
+</head>
+
+<head>
+    <div class="card col-4 offset-4">
+        <div class="card-body">
+            <form asp-controller="Admin" asp-action="EditPropertyTPost" method="post">
+                <div>
+                    <label asp-for="Id">Id:</label>
+                    <input class="form-control" type="text" asp-for="Id" readonly required />
+                </div>
+               
+                <div>
+                    <label asp-for="Nombre">Nombre:</label>
+                    <input class="form-control" type="text" asp-for="Nombre" required/>
+                    <span class="text-danger" asp-validation-for="Nombre"></span>
+                </div>
+                <div>
+                    <label asp-for="Descripcion">Descripción:</label>
+                    <input class="form-control" type="text" asp-for="Descripcion" required/>
+                    <span class="text-danger" asp-validation-for="Descripcion"></span>
+                </div>
+
+                <input asp-for="Count" type="hidden" value="0" />
+
+                <div>
+                    <br />
+                    <button class="btn btn-success" type="submit">Editar</button>
+                    <a class="btn btn-danger" asp-action="PropertyType">Volver</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</head>

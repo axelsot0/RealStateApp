@@ -1,0 +1,34 @@
+﻿@model ICollection<RealStateApp.Core.Application.ViewModels.Properties.PropiedadViewModel>
+
+<div class="container mt-5">
+    <h2 class="text-center">Mantenimiento de Propiedades</h2>
+    <div class="mb-4">
+        <a asp-action="CreateProperty" class="btn btn-success">Crear Propiedad</a>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Tipo de Propiedad</th>
+                <th>Tipo de Venta</th>
+                <th>Precio</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var property in Model)
+            {
+                <tr>
+                    <td>@property.CodigoPropiedad</td>
+                    <td>@property.TipoPropiedad</td>
+                    <td>@property.TipoVenta</td>
+                    <td>US$ @property.ValorPropiedad</td>
+                    <td>
+                        <a asp-action="EditProperty" asp-route-id="@property.Id" class="btn btn-primary">Editar</a>
+                        <a asp-action="DeleteProperty" asp-route-id="@property.Id" class="btn btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

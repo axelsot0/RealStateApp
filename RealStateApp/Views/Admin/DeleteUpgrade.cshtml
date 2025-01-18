@@ -1,0 +1,44 @@
+﻿@model RealStateApp.Core.Application.ViewModels.Upgrades.UpgradeViewModel
+
+@{
+    ViewData["Title"] = "Borrar mejora";
+}
+
+<head>
+    <style>
+        body {
+            background-color: #f3e3b2;
+        }
+
+        .card{
+            border: 1px solid black;
+            margin-top: 100px;
+            width: 400px;
+            justify-self: center;
+        }
+
+        .footer {
+            margin-top: 210px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <div class="card-header">
+            <hS>¿Seguro que quieres borrar esta mejora?</hS>
+        </div>
+        <div class="card-body">
+
+            <p>Id: @Model.Id</p>
+            <p>Nombre: @Model.Nombre</p>
+
+            <form asp-controller="Admin" asp-action="DeleteUpgradePost" method="post">
+
+                <input type="hidden" name="Id" value="@Model.Id" />
+                <button class="btn btn-warning" type="submit">Eliminar</button>
+                <a class="btn btn-danger" asp-controller="Admin" asp-action="Upgrades">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</body>

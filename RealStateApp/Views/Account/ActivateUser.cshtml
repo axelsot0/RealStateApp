@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Activación de Cuenta";
+}
+
+<div class="container mt-5">
+    <h2>@ViewData["Title"]</h2>
+
+    <!-- Mensaje de éxito o error -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+    else if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <!-- Opcional: Botón para redirigir al login o a la página de inicio -->
+    <div class="mt-4">
+        <a href="@Url.Action("Login", "Account")" class="btn btn-primary">Iniciar sesión</a>
+        <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Volver al inicio</a>
+    </div>
+</div>

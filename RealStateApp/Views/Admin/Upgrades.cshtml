@@ -1,0 +1,75 @@
+﻿@model List<RealStateApp.Core.Application.ViewModels.Upgrades.UpgradeViewModel>
+
+@{
+    ViewData["Title"] = "Manteniemiento de mejoras";
+}
+
+<head>
+    <style>
+        .row{
+            margin-top: 30px;
+        }
+
+        .crearbtn{
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .form-btn{
+            display: flex;
+        }
+
+        body {
+            background-color: #f3e3b2;
+        }
+
+        .card {
+            border: 1px solid black;
+        }
+
+        .footer {
+            margin-top: 100px;
+        }
+    </style>
+</head>
+
+<div class="crearbtn">
+    <a class="btn btn-primary" asp-controller="Admin" asp-action="CreateUpgrade">Crear Mejora</a>
+</div>
+
+<div>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+
+        @try
+        {
+            @foreach (var obj in Model)
+            {
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+
+                            <p>Nombre: @obj.Nombre</p>
+                            <p>Descripción: @obj.Descripcion</p>
+
+                            <div class="form-btn">
+                                <form asp-controller="Admin" asp-action="EditUpgrade" method="post">
+                                    <input type="hidden" name="Id" value="@obj.Id" />
+                                    <button class="btn btn-warning" type="submit">Editar</button>
+                                </form>
+                                <form asp-controller="Admin" asp-action="DeleteUpgrade" method="post">
+                                    <input type="hidden" name="Id" value="@obj.Id" />
+                                    <button class="btn btn-danger" type="submit">Eliminar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        }
+        catch (Exception ex)
+        {
+            <h2>Error: @ex</h2>
+        }
+    </div>
+</div>

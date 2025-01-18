@@ -1,0 +1,410 @@
+﻿@model RealStateApp.Core.Application.ViewModels.Properties.PropertyDetailsViewModel
+@using RealStateApp.Core.Domain.Enums;
+
+@{
+    var isCliente = User.IsInRole("Cliente");
+    var isAgente = User.IsInRole("Agente");
+}
+<head>
+    <style>
+        .footer{
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<div class="container my-5">
+    <!-- Título de la Propiedad -->
+    <h1 class="text-center mb-4">@Model.TipoPropiedad - Código: @Model.Codigo</h1>
+
+    <!-- Detalles de la Propiedad -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <!-- Galería de imágenes -->
+            <!-- Galería de imágenes -->
+            <div class="row row-cols-2 row-cols-md-3 g-3">
+                @if (Model?.Imagenes != null && Model.Imagenes.Any())
+                {
+                    int index = 0;
+                    foreach (var img in Model.Imagenes)
+                    {
+                        if (index < 2) // Renderizar solo las primeras dos imágenes
+                        {
+                            <div class="col">
+                                <div class="card shadow-sm">
+                                    <img src="@Url.Content("~" + img)" alt="Property Image" class="card-img-top img-fluid gallery-image" data-index="@index" data-bs-toggle="modal" data-bs-target="#imageModal" onclick="openImageModal(@index)" />
+                                </div>
+                            </div>
+                        }
+                        index++;
+                    }
+
+                    // Botón para ver más imágenes
+                    if (Model.Imagenes.Count > 2)
+                    {
+                        <a href="javascript:void(0);" class="text-decoration-none mt-3 d-block" onclick="openImageModal(0)">Ver todas las imágenes</a>
+                    }
+                }
+                else
+                {
+                    <p>No hay imágenes disponibles para esta propiedad.</p>
+                }
+            </div>
+
+        </div>
+        
+        <!-- Modal para la galería de imágenes -->
+        <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body position-relative">
+                        <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <img id="modalImage" src="" class="img-fluid w-100" alt="Property Image" />
+                        <button id="prevImage" class="btn btn-secondary position-absolute top-50 start-0 translate-middle-y" onclick="navigateImage(-1)">&#8249;</button>
+                        <button id="nextImage" class="btn btn-secondary position-absolute top-50 end-0 translate-middle-y" onclick="navigateImage(1)">&#8250;</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+        <div class="col-md-4">
+            <div class="card shadow-sm p-4">
+                <h4 class="mb-3">Detalles</h4>
+                <ul class="list-unstyled">
+                    <li><strong>Tipo de Venta:</strong> @Model.TipoVenta</li>
+                    <li><strong>Precio:</strong> US$@Model.Precio</li>
+                    <li><strong>Terreno:</strong> @Model.Terreno m²</li>
+                    <li><strong>Habitaciones:</strong> @Model.Habitaciones</li>
+                    <li><strong>Baños:</strong> @Model.Banios</li>
+                    <li><strong>Descripción:</strong> @Model.Descripcion</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección del Agente -->
+    <div class="card mb-4 shadow-sm p-4">
+        <h4 class="mb-3">Agente</h4>
+        <div class="d-flex align-items-center">
+            <img src="@(Model.Agente?.ProfilePhotoURL ?? "/images/default-agent.jpg")"
+                 alt="Foto del Agente"
+                 class="rounded-circle me-3"
+                 style="width: 80px; height: 80px;">
+            <div>
+                <p class="mb-1"><strong>Nombre:</strong> @Model.Agente.FirstName @Model.Agente.LastName</p>
+                <p class="mb-1"><strong>Email:</strong> @Model.Agente.Email</p>
+                <p class="mb-0"><strong>Teléfono:</strong> @Model.Agente.PhoneNumber</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mejora y Ofertas -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm p-4 mb-4">
+                <h4 class="mb-3">Mejoras</h4>
+                @if (Model.Mejoras != null && Model.Mejoras.Count > 0)
+                {
+                    <ul>
+                        @foreach (var mejora in Model.Mejoras)
+                        {
+                            <li>@mejora</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p>No se encontraron mejoras asociadas a esta propiedad.</p>
+                }
+            </div>
+        </div>
+        @if (isCliente || (isAgente && ViewBag.isOwnProperty))
+        {
+            <div class="col-md-6">
+                <!-- Ofertas -->
+                <div class="card shadow-sm p-4">
+                    <h4 class="mb-3">Ofertas Realizadas</h4>
+
+                    @if (Model.Offers != null && Model.Offers.Count > 0)
+                    {
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Cifra</th>
+                                    <th>Estado</th>
+                                    @if (isAgente)
+                                    {
+                                        <th>Acciones</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var offer in Model.Offers)
+                                {
+                                    <tr>
+                                        <td>@offer.Created.ToShortDateString()</td>
+                                        <td>US$ @offer.Cifra</td>
+                                        <td>@offer.Estado</td>
+                                        @if (isAgente && offer.Estado == EstadoOferta.Pendiente)
+                                        {
+                                            <td>
+                                                <button class="btn btn-success btn-sm" onclick="acceptOffer(@offer.Id)">Aceptar</button>
+                                                <button class="btn btn-danger btn-sm" onclick="rejectOffer(@offer.Id)">Rechazar</button>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                        <!-- Mostrar un mensaje si hay una oferta aceptada -->
+                        @if (Model.Offers.Any(o => o.Estado == EstadoOferta.Aceptada))
+                        {
+                            <div class="alert alert-info mt-3">
+                                Esta propiedad ya ha sido comprada y no se encuentra disponible para nuevas ofertas.
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p>No se han realizado ofertas para esta propiedad.</p>
+                    }
+
+                    <!-- Botón para realizar nueva oferta (solo si el cliente está autenticado y no hay una oferta aceptada) -->
+                    @if (isCliente && !Model.Offers.Any(o => o.Estado == EstadoOferta.Aceptada))
+                    {
+                        <button class="btn btn-primary w-100 mt-3" data-bs-toggle="modal" data-bs-target="#offerModal">
+                            Realizar Nueva Oferta
+                        </button>
+                    }
+                </div>
+            </div>
+
+            <!-- Modal para Nueva Oferta -->
+            @if (isCliente && !Model.Offers.Any(o => o.Estado == EstadoOferta.Aceptada))
+            {
+                <div class="modal fade" id="offerModal" tabindex="-1" aria-labelledby="offerModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="offerModalLabel">Realizar Nueva Oferta</h5>
+                            </div>
+                            <form asp-action="SubmitOffer" method="post">
+                                <div class="modal-body">
+                                    <input type="hidden" name="propertyId" value="@Model.Id" />
+                                    <div class="form-group mb-3">
+                                        <label for="offerAmount">Monto de la Oferta</label>
+                                        <input type="number" class="form-control" id="offerAmount" name="offerAmount" required />
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-primary">Enviar Oferta</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+
+
+
+
+        
+        @if (isCliente)
+        {
+            <div class="card shadow-sm p-4">
+                <h4 class="mb-3">Tu Chat con el Agente</h4>
+                @if (Model.Chats != null && Model.Chats.Any())
+                {
+                    <div class="chat-container" id="chat-container">
+                        @foreach (var mensaje in Model.Chats.FirstOrDefault()?.Mensajes)
+                        {
+                            <div class="d-flex @(mensaje.UserId == User.Identity.Name ? "justify-content-end" : "justify-content-start")">
+                                <div class="message-bubble">
+                                    <p>
+                                        <strong>
+                                            @if (mensaje.UserId == User.Identity.Name)
+                                            {
+                                                @Model.Agente.FirstName @Model.Agente.LastName  <!-- Nombre del Agente -->
+                                            }
+                                            else
+                                            {
+                                                @mensaje.UserName  <!-- Nombre del Cliente que envió el mensaje -->
+                                            }
+                                        </strong>
+                                    </p>
+                                    <p>@mensaje.Contenido</p>
+                                    <small class="text-muted">@mensaje.Created.ToString("g")</small>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Formulario para enviar mensaje -->
+                    <form method="POST" asp-controller="Property" asp-action="SendMessage">
+                        <textarea name="contenido" placeholder="Escribe un mensaje..." class="form-control"></textarea>
+                        <input type="hidden" name="propiedadId" value="@Model.Id" />
+                        <input type="hidden" name="chatId" value="@Model.Chats.FirstOrDefault()?.Id" />
+                        <button type="submit" class="btn btn-primary w-100 mt-3">Enviar Mensaje</button>
+                    </form>
+                }
+                else
+                {
+                    <p>No tienes mensajes en este chat.</p>
+                }
+            </div>
+        }
+        @if (isAgente)
+        {
+            <div class="card shadow-sm p-4">
+                <h4 class="mb-3">Chats con Clientes</h4>
+                @if (Model.Chats != null && Model.Chats.Any())
+                {
+                    @foreach (var clientChat in Model.Chats)
+                    {
+
+                        <div class="chat-card mb-3">
+                            <h5>@clientChat.NombreCliente</h5>
+
+                            <!-- Mostrar los mensajes de este chat -->
+                            <div id="chatMessages_@clientChat.ClienteId" class="chat-container">
+                                @foreach (var mensaje in clientChat.Mensajes)
+                                {
+                                    <div class="d-flex @(mensaje.UserId == User.Identity.Name ? "justify-content-end" : "justify-content-start")">
+                                        <div class="message-bubble">
+                                            <p>
+                                                <strong>
+                                                    <!-- Mostrar el nombre del remitente del mensaje -->
+                                                    @if (mensaje.UserId == User.Identity.Name)
+                                                    {
+                                                        @Model.Agente.FirstName @Model.Agente.LastName  <!-- Nombre del Agente -->
+                                                    }
+                                                    else
+                                                    {
+                                                        @mensaje.UserName  <!-- Nombre del Cliente que envió el mensaje -->
+                                                    }
+                                                </strong>
+                                            </p>
+                                            <p>@mensaje.Contenido</p>
+                                            <small class="text-muted">@mensaje.Created.ToString("g")</small>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                            <!-- Formulario para enviar un mensaje en este chat -->
+                            <form method="post" asp-action="SendMessage" class="mt-3">
+                                <textarea name="contenido" placeholder="Escribe un mensaje..." class="form-control" required></textarea>
+                                <input type="hidden" name="chatId" value="@clientChat.Id" />
+                                <input type="hidden" name="propiedadId" value="@Model.Id" />
+                                <button type="submit" class="btn btn-primary w-100 mt-3">Enviar Mensaje</button>
+                            </form>
+                        </div>
+                    }
+                }
+                else if(isAgente && !ViewBag.isOwnProperty)
+                {
+                    <p>Solo puedes chatear en tus propiedades</p>
+                }
+                else
+                {
+                    <p>No hay chats disponibles.</p>
+                }
+                
+            </div>
+        }
+
+        <script>
+            // Arreglo de las URLs de todas las imágenes
+            const images = @Html.Raw(Json.Serialize(Model.Imagenes));
+
+            let currentIndex = 0;
+
+            function openImageModal(index) {
+                currentIndex = index;
+                updateModalImage();
+
+                // Obtener el modal y mostrarlo
+                const modalElement = document.getElementById('imageModal');
+                const modal = new bootstrap.Modal(modalElement);
+                modal.show();
+
+                // Manejar el cierre del modal para asegurarse de que todo se limpie correctamente
+                modalElement.addEventListener('hidden.bs.modal', function () {
+                    document.body.classList.remove('modal-open');
+                    document.querySelector('.modal-backdrop')?.remove();
+                });
+            }
+
+            function updateModalImage() {
+                if (images && images.length > 0) {
+                    document.getElementById('modalImage').src = images[currentIndex];
+                }
+            }
+
+            function navigateImage(direction) {
+                currentIndex += direction;
+
+                // Asegurarse de que el índice esté dentro de los límites
+                if (currentIndex < 0) {
+                    currentIndex = images.length - 1;
+                } else if (currentIndex >= images.length) {
+                    currentIndex = 0;
+                }
+
+                updateModalImage();
+            }
+        </script>
+        <script>
+            async function acceptOffer(offerId) {
+                try {
+                    const response = await fetch(`/Property/AcceptOffer?offerId=${offerId}`, {
+                        method: "POST"
+                    });
+
+                    if (response.ok) {
+                        alert("La oferta ha sido aceptada exitosamente.");
+                        location.reload();
+                    } else {
+                        alert("Hubo un problema al aceptar la oferta.");
+                    }
+                } catch (error) {
+                    alert("Error de red: no se pudo completar la solicitud.");
+                }
+            }
+
+            async function rejectOffer(offerId) {
+                try {
+                    const response = await fetch(`/Property/RejectOffer?offerId=${offerId}`, {
+                        method: "POST"
+                    });
+
+                    if (response.ok) {
+                        alert("La oferta ha sido rechazada exitosamente.");
+                        location.reload();
+                    } else {
+                        alert("Hubo un problema al rechazar la oferta.");
+                    }
+                } catch (error) {
+                    alert("Error de red: no se pudo completar la solicitud.");
+                }
+            }
+        </script>
+
+
+
+
+    
+
+
+
+
+
+</div>

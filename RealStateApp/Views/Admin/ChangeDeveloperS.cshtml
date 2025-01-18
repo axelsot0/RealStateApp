@@ -1,0 +1,44 @@
+﻿@using RealStateApp.Core.Application.ViewModels.User.Desarrollador
+@model AppDeveloperViewModel
+
+@{
+    ViewData["title"] = "Editar status";
+}
+
+<head>
+    <style>
+        .footer {
+            margin-top: 120px;
+        }
+
+        body {
+            background-color: #f3e3b2;
+        }
+
+        .card {
+            border: 1px solid black;
+            margin-top: 100px;
+        }
+    </style>
+</head>
+
+<head>
+    <div class="card col-4 offset-4">
+        <div class="card-header">
+            <h5>¿Seguro que quiere actualizar el estado de este usuario?</h5>
+        </div>
+        <div class="card-body">
+            <form asp-controller="Admin" asp-action="Developer" method="post">
+
+                <label asp-for="Id">Id:</label>
+                <input class="form-control" type="text" asp-for="Id" readonly required />
+
+                <div>
+                    <br />
+                    <button class="btn btn-success" type="submit">Cambiar estado</button>
+                    <a class="btn btn-danger" asp-action="Developer">Volver</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</head>

@@ -1,0 +1,66 @@
+﻿@model List<RealStateApp.Core.Application.ViewModels.User.Agente.AppAgentViewModel>
+
+@{
+    ViewData["Title"] = "Listado de agentes";
+}
+
+<head>
+    <style>
+        .row{
+            margin-top: 40px;
+        }
+
+        body {
+            background-color: #f3e3b2;
+        }
+
+        .footer{
+            margin-top: 100px;
+        }
+
+        .card{
+            border: 1px solid black;
+        }
+
+        .form-btn {
+            display: flex;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        @foreach (var obj in Model)
+        {
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <p>Nombre: @obj.Firstname</p>
+                        <p>Apellido: @obj.Lastname</p>
+                        <p>Propiedades: @obj.PropertyCount</p>
+                        <p>Correo: @obj.Email</p>
+
+                        <div class="form-btn">
+                            <form asp-controller="Admin" asp-action="ChangeAgentS" method="post">
+
+                                <input type="hidden" name="Id" value="@obj.Id" />
+                                <button class="btn @(obj.EmailConfirmed ? "btn-warning" : "btn-success")" type="submit">@(obj.EmailConfirmed ? "Desactivar" : "Activar")</button>
+
+                            </form>
+                            <form asp-controller="Admin" asp-action="DeleteAgent" method="post">
+                   
+                                <input type="hidden" name="Id" value="@obj.Id" />
+                                <button class="btn btn-danger" type="submit">Eliminar</button>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    
+    <footer class="row row-cols-lg6 footer">
+
+    </footer>
+</body>

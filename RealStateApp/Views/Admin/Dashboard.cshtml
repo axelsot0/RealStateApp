@@ -1,0 +1,41 @@
+﻿@model RealStateApp.Core.Application.ViewModels.View.SystemOverviewViewModel
+
+
+@{
+    ViewData["title"] = "System overview";
+}
+
+<head>
+    <style>
+        .footer {
+            margin-top: 220px;
+        }
+    </style>
+</head>
+
+<div class="text-center mt-5">
+    <h1>Overview del sistema</h1>
+</div>
+
+<div class="row mt-5">
+    <table class="table">
+        <tr>
+            <th scope="col">Propiedades registradas</td>
+            <th scope="col">Agentes activos</th>
+            <th scope="col">Agentes inactivos</th>
+            <th scope="col">Clientes activos</th>
+            <th scope="col">Clientes inactivos</th>
+            <th scope="col">Desarrolladores activos</th>
+            <th scope="col">Desarrolladores inactivos</th>
+        </tr>
+        <tr>
+            <td>@Model.PropertyCount</td>
+            <td>@Model.ActiveAgentsCount</td>
+            <td>@Model.InactiveAgentsCount</td>
+            <td>@Model.ActiveClientsCount</td>
+            <td>@Model.InactiveClientsCount</td>
+            <td>@Model.ActiveDevelopersCount</td>
+            <td>@Model.InactiveDevelopersCount</td>
+        </tr>
+    </table>
+</div>

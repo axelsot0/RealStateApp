@@ -1,0 +1,87 @@
+﻿@using System.Security.Claims
+@model List<RealStateApp.Core.Application.ViewModels.User.Admin.AppAdminViewModel>
+
+@{
+    ViewData["Title"] = "Manteniemiento de admins";
+    //var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
+
+<head>
+    <style>
+        .row {
+            margin-top: 30px;
+        }
+
+        .crearbtn{
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .footer {
+            margin-top: 100px;
+        }
+
+        body {
+            background-color: #f3e3b2;
+        }
+
+        .card {
+            border: 1px solid black;
+        }
+
+        .form-btn {
+            display: flex;
+        }
+    </style>
+</head>
+
+<body>
+    <form class="crearbtn" asp-controller="Admin" asp-action="CreateAdmin" method="post">
+        <input type="hidden" name="mode" value="@true" />
+
+        <button class = "btn btn-primary" type="submit">Crear Admin</button>
+    </form>
+
+    <div>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        
+            @try
+            {
+                @foreach (var obj in Model)
+                {
+                    @* if (obj.Id /*!= UserId*/)
+                    { *@
+                        <div class="col">
+                            <div class="card">
+                                <div class="card-body">
+                                     @* <p>Id: @obj.Id </p> *@
+                    
+                                     <p>Nombre de usuario: @obj.UserName</p>
+                                     <p>Nombre: @obj.FirstName</p>
+                                     <p>Apellido: @obj.LastName</p>
+                                     <p>Cedula: @obj.Cedula</p>
+                                     <p>Correo @obj.Email</p>
+
+                                    <div class="form-btn">
+                                        <form asp-controller="Admin" asp-action="EditAdmin" method="post">
+                                            <input type="hidden" name="Id" value="@obj.Id" />
+                                            <button class="btn btn-warning" type="submit">Editar</button>
+                                        </form>
+                                        <form asp-controller="Admin" asp-action="ChangeAdminS" method="post">
+                                            <input type="hidden" name="Id" value="@obj.Id" />
+                                            <button class="btn @(obj.EmailConfirmed ? "btn-danger" : "btn-success")" type="submit">@(obj.EmailConfirmed ? "Desactivar" : "Activar")</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @* } *@
+                }
+            }
+            catch(Exception ex)
+            {
+                <h2>Error: @ex</h2>
+            }
+        </div>
+    </div>
+</body>

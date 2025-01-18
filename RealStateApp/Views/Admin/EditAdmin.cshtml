@@ -1,0 +1,61 @@
+﻿@using RealStateApp.Core.Application.ViewModels.User.Admin
+@model AdminHandlerViewModel
+
+@{
+    ViewData["title"] = "editar desarrollador";
+}
+
+<head>
+    <style>
+        .footer {
+            margin-top: 100px;
+        }
+
+        body {
+            background-color: #f3e3b2;
+        }
+
+        .card {
+            border: 1px solid black;
+            margin-top: 60px;
+        }
+    </style>
+</head>
+
+<div class="card col-4 offset-4">
+    <div class="card-body">
+        <form asp-controller="Admin" asp-action="EditAdminPost" method="post">
+
+            <input asp-for="Id" type="hidden" />
+
+            <input asp-for="AdminId" type="hidden" />
+
+            <label asp-for="UserName">Nombre de usuario:</label>
+            <input class="form-control" type="text" asp-for="UserName" required />
+
+            <label asp-for="FirstName">Nombre:</label>
+            <input class="form-control" type="text" asp-for="FirstName" required />
+
+            <label asp-for="LastName">Apellido:</label>
+            <input class="form-control" type="text" asp-for="LastName" required />
+
+            <label asp-for="Email">Correo electrónico:</label>
+            <input class="form-control" type="text" asp-for="Email" required />
+
+            <label asp-for="Cedula">Cedula:</label>
+            <input class="form-control" type="text" asp-for="Cedula" required />
+
+            <label asp-for="Password">Contraseña:</label>
+            <input class="form-control" type="password" asp-for="Password" />
+
+            <label asp-for="ConfirmPassword">Confirmar contraseña:</label>
+            <input class="form-control" type="password" asp-for="ConfirmPassword" />
+
+            <div>
+                <br />
+                <button class="btn btn-success" type="submit">Editar</button>
+                <a class="btn btn-danger" asp-action="Admin">Volver</a>
+            </div>
+        </form>
+    </div>
+</div>

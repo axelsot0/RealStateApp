@@ -1,0 +1,13 @@
+﻿@model RealStateApp.Core.Application.ViewModels.Properties.PropertyDetailsViewModel
+
+<div class="container mt-5">
+    <h2 class="text-center">Eliminar Propiedad</h2>
+    <p>¿Está seguro que desea eliminar esta propiedad?</p>
+    <div class="text-center">
+        <a asp-action="AgentProperties" class="btn btn-secondary">Cancelar</a>
+        <form asp-action="ConfirmDeleteProperty" method="post" style="display:inline;">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn btn-danger">Aceptar</button>
+        </form>
+    </div>
+</div>

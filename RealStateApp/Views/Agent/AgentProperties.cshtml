@@ -1,0 +1,60 @@
+﻿<style>
+    .property-image {
+        width: 100%; /* Asegura que el contenedor de la imagen ocupe todo el ancho */
+        height: 200px; /* Altura máxima del contenedor de la imagen */
+        overflow: hidden; /* Oculta cualquier parte de la imagen que exceda el contenedor */
+    }
+
+        .property-image img {
+            width: 100%; /* La imagen ocupará todo el ancho del contenedor */
+            height: 100%; /* La imagen ocupará toda la altura del contenedor */
+            object-fit: cover; /* La imagen se recortará si es necesario para cubrir el espacio */
+        }
+</style>
+@using System.Linq;
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Propiedades del Agente</h2>
+
+    @if (ViewData["Message"] != null)
+    {
+        <div class="alert alert-warning text-center">
+            @ViewData["Message"]
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var propiedad in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <a asp-controller="Property" asp-action="Details" asp-route-id="@propiedad.Id" class="text-decoration-none">
+                        <div class="property-card shadow-sm">
+                            <div class="property-image">
+                                @if (propiedad.Imagenes != null && propiedad.Imagenes.Count > 0)
+                                {
+                                    <img src="@Url.Content("~" + propiedad.Imagenes[0])" alt="Imagen de propiedad" />
+                                }
+                                else
+                                {
+                                    <img src="https://via.placeholder.com/300" alt="Imagen de propiedad por defecto" />
+                                }
+                            </div>
+
+
+                            <div class="property-info">
+                                <h5>@propiedad.TipoPropiedad</h5>
+                                <p>Código: @propiedad.CodigoPropiedad</p>
+                                <p class="property-price">US$ @string.Format("{0:N2}", propiedad.ValorPropiedad)</p>
+                                <div class="property-details">
+                                    <span><i class="fas fa-ruler-combined"></i> @propiedad.TamañoPropiedad m²</span>
+                                    <span><i class="fas fa-bed"></i> @propiedad.CantidadHabitaciones</span>
+                                    <span><i class="fas fa-bath"></i> @propiedad.CantidadBaños</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    }
+</div>

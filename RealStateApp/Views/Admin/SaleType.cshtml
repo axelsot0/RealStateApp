@@ -1,0 +1,75 @@
+﻿@using RealStateApp.Core.Application.ViewModels.Sales
+@model List<SaleTypeViewModel>
+
+@{
+    ViewData["title"] = "Mantenimiento de tipos de ventas";
+}
+
+<head>
+    <style>
+        .row{
+            margin: 30px;
+        }
+
+        .crearbtn{
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .form-btn {
+            display: flex;
+        }
+
+        body {
+            background-color: #f3e3b2;
+        }
+
+        .card {
+            border: 1px solid black;
+        }
+
+        .footer {
+            margin-top: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="crearbtn">
+        <a class="btn btn-primary" asp-controller="Admin" asp-action="CreateSaleT">Crear tipo</a>
+    </div>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        @try
+        {
+            @foreach (var obj in Model)
+            {
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+
+                            <p>Nombre: @obj.Nombre</p>
+                            <p>Descripción: @obj.Descripcion</p>
+                            <p>Cantidad: @obj.Count</p>
+
+                            <div class="form-btn">
+                                <form asp-controller="Admin" asp-action="EditSaleT" method="post">
+                                    <input type="hidden" name="Id" value="@obj.Id" />
+                                    <button class="btn btn-warning" type="submit">Editar</button>
+                                </form>
+                                <form asp-controller="Admin" asp-action="DeleteSaleT" method="post">
+                                    <input type="hidden" name="Id" value="@obj.Id" />
+                                    <button class="btn btn-danger" type="submit">Eliminar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        catch (Exception ex)
+        {
+            <h2>Error: @ex</h2>
+        }
+    </div>
+</body>

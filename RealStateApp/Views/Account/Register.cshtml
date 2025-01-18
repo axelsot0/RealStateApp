@@ -1,0 +1,236 @@
+﻿@model RegisterViewModel
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - RealStateApp</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --rich-black: #050517;
+            --flame: #CF5C36;
+            --sunset: #EFC88B;
+            --vanilla: #F4E3B2;
+            --platinum: #D3D5D7;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: var(--vanilla);
+            color: var(--rich-black);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .register-container {
+            width: 100%;
+            max-width: 400px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .tabs {
+            display: flex;
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 15px 0;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+            .tab.client {
+                background-color: var(--flame);
+                color: #fff;
+            }
+
+            .tab.agent {
+                background-color: var(--rich-black);
+                color: var(--sunset);
+            }
+
+        .form {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid var(--platinum);
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s, color 0.3s;
+        }
+
+            .form-control:focus {
+                outline: none;
+                border-color: var(--flame);
+                box-shadow: 0 0 5px var(--flame);
+            }
+
+        .btn {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 10px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .btn-register {
+            background-color: var(--rich-black);
+            color: var(--sunset);
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            font-size: 0.8rem;
+            background-color: var(--rich-black);
+            color: var(--sunset);
+        }
+
+        .dark-mode {
+            background-color: var(--rich-black);
+            color: var(--sunset);
+        }
+            .dark-mode .title h1{
+                text:"Work with us";
+            }
+            .dark-mode .register-container {
+                background-color: var(--rich-black);
+            }
+
+            .dark-mode .form-control {
+                background-color: var(--flamesunset);
+                color: var(--platinum);
+                border-color: var(--sunset);
+                
+            }
+
+            
+
+            .dark-mode .btn-register {
+                background-color: var(--flame);
+                color: #fff;
+            }
+
+            .dark-mode .tab.client {
+                background-color: var(--rich-black);
+                color: var(--sunset);
+            }
+
+            .dark-mode .tab.agent {
+                background-color: var(--flame);
+                color: #fff;
+            }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 class="title text-center">RealStateApp - Registro</h1>
+    </header>
+    <div class="container">
+        <div class="register-container" id="registerContainer">
+            <!-- Tabs -->
+            <div class="tabs">
+                <div class="tab client" id="tabClient" onclick="setRole('Cliente')">Cliente</div>
+                <div class="tab agent" id="tabAgent" onclick="setRole('Agente')">Agente</div>
+            </div>
+            <!-- Formulario -->
+            <form class="form" id="registerForm" method="post" enctype="multipart/form-data" asp-controller="Account" asp-action="Register">
+                <input asp-for="Role" type="hidden" id="roleField" value="Cliente">
+                <div class="form-group">
+                    <label asp-for="Photo" class="form-label">Foto de Usuario</label>
+                    <input asp-for="Photo" type="file" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label asp-for="FirstName" class="form-label">Nombre</label>
+                    <input asp-for="FirstName" type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label asp-for="LastName" class="form-label">Apellido</label>
+                    <input asp-for="LastName" type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label asp-for="PhoneNumber" class="form-label">Teléfono</label>
+                    <input asp-for="PhoneNumber" type="tel" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label asp-for="UserName" class="form-label">Nombre de Usuario</label>
+                    <input asp-for="UserName" type="text" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="form-label">Correo</label>
+                    <input asp-for="Email" type="email" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password" class="form-label">Contraseña</label>
+                    <input asp-for="Password" type="password" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label asp-for="ConfirmPassword" class="form-label">Confirmar Contraseña</label>
+                    <input asp-for="ConfirmPassword" type="password" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-register">Registrar</button>
+            </form>
+        </div>
+    </div>
+    <footer>
+        © 2024 - RealStateApp
+    </footer>
+    <script>
+        function setRole(role) {
+            document.getElementById("tabAgent").addEventListener("click", () => {
+                document.body.classList.add("dark-mode");
+                document.querySelector(".title").textContent = "Work with us";
+            });
+
+            document.getElementById("tabClient").addEventListener("click", () => {
+                document.body.classList.remove("dark-mode");
+                document.querySelector(".title").textContent = "RealStateApp - Registro";
+            });
+            document.getElementById("roleField").value = role;
+            if (role === "Agente") {
+                document.body.classList.add("dark-mode");
+            } else {
+                document.body.classList.remove("dark-mode");
+            }
+        }
+    </script>
+</body>
+</html>

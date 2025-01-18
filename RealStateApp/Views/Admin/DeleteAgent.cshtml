@@ -1,0 +1,47 @@
+﻿@model RealStateApp.Core.Application.ViewModels.User.Agente.AppAgentViewModel
+
+@{
+    ViewData["Title"] = "Borrar agente";
+}
+
+<head>
+    <style>
+        body {
+            background-color: #f3e3b2;
+        }
+
+        .card{
+            border: 1px solid black;
+        }
+
+        .row{
+            margin-top: 100px;
+        }
+
+        .footer {
+            margin-top: 300px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row justify-content-center">
+        <div class="card">
+            <h5 class="card-title mt-3">¿Seguro que quieres borrar este agente?</h5>
+            <div class = "card-body">
+
+                <p>Nombre: @Model.Firstname</p>
+                <p>Apellido: @Model.Lastname</p>
+                <p>Correo: @Model.Email</p>
+
+                <form asp-controller="Admin" asp-action="DeleteAgentPost" method="post">
+
+                    <input type="hidden" name="Id" value="@Model.Id" />
+                    <button class="btn btn-warning" type="submit">Eliminar</button>
+
+                    <a class="btn btn-danger" asp-controller="Admin" asp-action="Agent">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
